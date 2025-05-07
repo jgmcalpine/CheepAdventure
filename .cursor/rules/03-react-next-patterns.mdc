@@ -16,4 +16,20 @@ alwaysApply: true
 - Destructure props; define `type Props = {}` explicitly.
 - Co-locate components, minimal styles, and tests together.
 - Avoid prop drilling; prefer context or render props.
+- Prefer iteration and modularization over duplication.
+- Use descriptive variable names with auxiliary verbs (e.g., isLoading).
+- Use lowercase with dashes for directories (e.g., components/auth-wizard).
 - Use `React.lazy` for client-only heavy components.
+- Handle errors gracefully and return appropriate responses.
+
+Key Conventions
+
+1. Rely on Next.js App Router for state changes.
+2. Prioritize Web Vitals (LCP, CLS, FID).
+3. Minimize 'use client' usage:
+  - Prefer server components and Next.js SSR features.
+  - Use 'use client' only for Web API access in small components.
+  - Avoid using 'use client' for data fetching or state management.
+  Refer to Next.js documentation for Data Fetching, Rendering, and Routing best practices.
+  - https://nextjs.org/docs
+
