@@ -1,0 +1,16 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+---
+description: Bitcoin, Lightning, and Nostr implementation rules
+alwaysApply: true
+---
+
+# Nostr / Bitcoin Specifics
+
+- Use **NDK** exclusively for Nostr relay interactions.
+- Generate Lightning invoices via `@/lib/lnurl.ts#createInvoice`.
+- Store connected user pubkey in `AuthContext`; never global mutable vars.
+- Handle payments with optimistic UI, then confirm with WebSocket or Nip-04 DM.

@@ -1,0 +1,18 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+---
+description: Formatting and linting rules
+alwaysApply: true
+---
+
+# Formatting Rules
+
+- Indent with hard tabs (`\t`). Configure Prettier: `"useTabs": true`.
+- Line length ≤ 100 chars; wrap longer JSX props vertically.
+- Always end statements with semi‑colons.
+- Use single quotes for TS/JS; double quotes for JSON and HTML attributes.
+- Trailing commas where valid in ES5.
+- Sort object keys when it improves diff‑clarity; otherwise preserve intention.

@@ -1,0 +1,16 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+---
+description: Git and version control conventions
+alwaysApply: true
+---
+
+# Version Control
+
+- Use **Conventional Commits** (`feat:`, `fix:`, `refactor:`, `docs:`, `test:`, `chore:`).
+- One logical change per commit.
+- Pre-commit: ESLint, Prettier, unit tests.
+- Pre-push: full test suite.

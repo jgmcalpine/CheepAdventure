@@ -1,0 +1,18 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+---
+description: Import order enforcement
+alwaysApply: true
+---
+
+# Import Ordering
+
+1. React & Next.js core modules first.
+2. Third-party packages.
+3. `@/` aliases (absolute imports).
+4. Relative `./` then `../`.
+
+Use the ESLint `simple-import-sort` plugin to enforce.

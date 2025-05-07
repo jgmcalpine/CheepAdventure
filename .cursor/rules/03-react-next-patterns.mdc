@@ -1,0 +1,19 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+---
+description: React and Next.js component best practices
+alwaysApply: true
+---
+
+# React / Next.js Patterns
+
+- Functional components only; no classes.
+- Default to server components; use `"use client"` only when necessary.
+- PascalCase component filenames inside `/components`.
+- Destructure props; define `type Props = {}` explicitly.
+- Co-locate components, minimal styles, and tests together.
+- Avoid prop drilling; prefer context or render props.
+- Use `React.lazy` for client-only heavy components.

@@ -1,0 +1,24 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+---
+description: Defines the standard stack and technology choices for all projects
+alwaysApply: true
+---
+
+# Stack
+
+| Layer                   | Choice                                                               |
+| ----------------------- | -------------------------------------------------------------------- |
+| **Language**            | **TypeScript 5.x** (`"strict": true`)                                |
+| **Runtime**             | Node.js 20 LTS                                                       |
+| **Framework**           | Next.js 14 (App Router + RSC)                                        |
+| **UI Library**          | React 18, MUI                                                        |
+| **Styling**             | TailwindCSS 3                                                        |
+| **State / Data**        | React hooks + SWR — *NDK for Nostr events*                           |
+| **Lightning / Nostr**   | LNURL, Nostr Wallet Connect                                          |
+| **Testing**             | Jest + React Testing Library; Cypress e2e                            |
+| **Tooling**             | ESLint (typescript‑eslint), Prettier (tab mode)
+| **CI/CD**               | GitHub Actions                                                       |

@@ -1,0 +1,15 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+---
+description: TailwindCSS guidelines
+alwaysApply: true
+---
+
+# TailwindCSS Guidelines
+
+- Favor utility classes directly in JSX for rapid composition.
+- Extract into `@apply` or components after 3+ repetitions.
+- Keep `className` strings ≤ 120 chars; break across lines if longer.

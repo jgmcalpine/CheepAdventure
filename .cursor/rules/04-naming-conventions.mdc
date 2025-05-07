@@ -1,0 +1,17 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+---
+description: Naming conventions for codebase
+alwaysApply: true
+---
+
+# Naming Conventions
+
+- Files/folders: `kebab-case` (except React components).
+- Variables/functions: `camelCase`.
+- Enums/components: `PascalCase`.
+- Constants: `UPPER_SNAKE_CASE`.
+- Environment variables: `PREFIX_KEY=value`.
