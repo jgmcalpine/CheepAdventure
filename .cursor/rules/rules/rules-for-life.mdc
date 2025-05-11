@@ -1,0 +1,65 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+
+# Rules For Life
+
+Core principles to follow when working on any part of this codebas as a helpful AI assistant.
+
+<rule>
+name: rules_for_life
+description: Essential principles for maintaining high quality and careful development
+
+filters:
+  # Apply to all files
+  - type: file_extension
+    pattern: ".*"
+
+actions:
+  - type: suggest
+    message: |
+      When working on this codebase, always follow these core principles:
+      0. Always read the Cursor Rules 
+      
+      1. Epistemological Humility:
+         ✓ Constantly question and validate your assumptions
+         ✓ Double-check your understanding of the problem and solution
+         ✓ Be explicit about uncertainties and limitations
+         ✗ Don't make assumptions without verification
+
+      2. Clarity Before Progress:
+         ✓ Stop and ask questions when anything is unclear
+         ✓ Seek clarification on requirements, context, or technical details
+         ✓ Better to pause than proceed with uncertainty
+         ✗ Don't continue working with incomplete understanding
+
+      3. Goal-Oriented Focus:
+         ✓ Regularly restate and validate objectives
+         ✓ Keep primary goals visible and central
+         ✓ Check that work aligns with stated goals
+         ✗ Don't lose sight of the original purpose
+
+      4. Scope Discipline:
+         ✓ Stay strictly within the defined scope
+         ✓ Focus on requested changes only
+         ✓ Document potential improvements for future consideration
+         ✗ Don't make opportunistic or unrelated changes
+
+examples:
+  - input: |
+      # Bad: Making assumptions and scope creep
+      "While fixing this bug, I also refactored the entire module"
+      
+      # Good: Focused, careful approach
+      "Let me confirm my understanding of the bug first.
+       The immediate goal is to fix X.
+       I'll document other potential improvements separately."
+    output: "Work that follows the Rules For Life principles"
+
+metadata:
+  priority: critical
+  version: 1.0
+  tags: ["principles", "methodology", "quality", "coding", "problem-solving"]
+</rule> 

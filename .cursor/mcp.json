@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "go-ham-headless-agent-mode": {
+      "command": "bun",
+      "args": ["run", "/headless/headless-agent-mcp/index.ts"]
+    }
+  }
+}
