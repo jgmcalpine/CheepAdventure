@@ -1,13 +1,52 @@
+'use client';
+
+import { useState } from 'react';
 import { Metadata } from 'next';
+import { FSMBuilder } from '@/components/fsm-builder/fsm-builder';
+import { mockFSM, mockSteps } from '@/lib/mock-data';
+import { FSMStep } from '@/lib/supabase';
 
 export const metadata: Metadata = {
-  title: 'CheepAdventure',
+	title: 'CheepAdventure - FSM Editor Demo',
 };
 
 export default function Home() {
-  return (
-    <div className="min-h-screen flex items-center justify-center">
-      <h1 className="text-4xl font-bold">CheepAdventure coming soon</h1>
-    </div>
-  );
+	const [steps, setSteps] = useState<FSMStep[]>(mockSteps);
+
+	const handleStepCreate = async (step: Omit<FSMStep, 'id' | 'created_at' | 'updated_at'>) => {
+		const newStep: FSMStep = {
+			...step,
+			id: `step-${Date.now()}`,
+			created_at: new Date().toISOString(),
+			updated_at: new Date().toISOString(),
+		};
+		setSteps([...steps, newStep]);
+	};
+
+	const handleStepUpdate = async (id: string, step: Partial<FSMStep>) => {
+		setSteps(steps.map((s: FSMStep) => (s.id === id ? { ...s, ...step } : s)));
+	};
+
+	const handleStepDelete = async (id: string) => {
+		setSteps(steps.filter((s: FSMStep) => s.id !== id));
+	};
+
+	return (
+		<div className="min-h-screen flex flex-col">
+			<header className="bg-white shadow">
+				<div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+					<h1 className="text-3xl font-bold text-gray-900">{mockFSM.title}</h1>
+					<p className="mt-1 text-sm text-gray-500">{mockFSM.description}</p>
+				</div>
+			</header>
+			<main className="flex-1">
+				<FSMBuilder
+					steps={steps}
+					onStepCreate={handleStepCreate}
+					onStepUpdate={handleStepUpdate}
+					onStepDelete={handleStepDelete}
+				/>
+			</main>
+		</div>
+	);
 }
