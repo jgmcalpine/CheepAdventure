@@ -1,0 +1,50 @@
+{
+	"cli": {
+		"version": ">= 5.9.1"
+	},
+	"build": {
+		"development": {
+			"developmentClient": true,
+			"distribution": "internal",
+			"env": {
+				"SUPABASE_URL": "your_development_supabase_url",
+				"SUPABASE_ANON_KEY": "your_development_supabase_anon_key",
+				"ELEVENLABS_API_KEY": "your_development_elevenlabs_api_key"
+			}
+		},
+		"preview": {
+			"distribution": "internal",
+			"android": {
+				"buildType": "apk"
+			},
+			"env": {
+				"SUPABASE_URL": "your_staging_supabase_url",
+				"SUPABASE_ANON_KEY": "your_staging_supabase_anon_key",
+				"ELEVENLABS_API_KEY": "your_staging_elevenlabs_api_key"
+			}
+		},
+		"production": {
+			"android": {
+				"buildType": "app-bundle"
+			},
+			"env": {
+				"SUPABASE_URL": "your_production_supabase_url",
+				"SUPABASE_ANON_KEY": "your_production_supabase_anon_key",
+				"ELEVENLABS_API_KEY": "your_production_elevenlabs_api_key"
+			}
+		}
+	},
+	"submit": {
+		"production": {
+			"ios": {
+				"appleId": "your_apple_id",
+				"ascAppId": "your_app_store_connect_app_id",
+				"appleTeamId": "your_apple_team_id"
+			},
+			"android": {
+				"serviceAccountKeyPath": "./path-to-your-google-service-account.json",
+				"track": "production"
+			}
+		}
+	}
+} 
