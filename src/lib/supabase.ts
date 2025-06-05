@@ -1,28 +1,54 @@
 import { createClient } from '@supabase/supabase-js';
 
-// These types will be used throughout the application
-export type FSMMetadata = {
+// Types for our database tables
+export type Profile = {
 	id: string;
-	title: string;
-	description: string;
-	user_id: string;
-	num_steps: number;
+	username: string;
+	preferences: Record<string, unknown>;
 	created_at: string;
 	updated_at: string;
 };
 
-export type FSMStep = {
+export type Game = {
 	id: string;
-	fsm_id: string;
-	title: string;
-	content: string;
-	media_type: 'text' | 'image' | 'video';
-	media_url?: string;
-	next_steps: string[];
-	position_x: number;
-	position_y: number;
+	game_date: string;
+	home_team: string;
+	away_team: string;
+	status: 'scheduled' | 'live' | 'final';
+	inning?: number;
+	inning_half?: 'top' | 'bottom';
 	created_at: string;
 	updated_at: string;
+};
+
+export type Play = {
+	id: string;
+	game_id: string;
+	play_id: string;
+	sequence_number: number;
+	inning: number;
+	inning_half: 'top' | 'bottom';
+	description: string;
+	audio_url?: string;
+	audio_generated_at?: string;
+	created_at: string;
+};
+
+export type ListeningSession = {
+	id: string;
+	user_id: string;
+	game_id: string;
+	started_at: string;
+	ended_at?: string;
+	last_play_sequence: number;
+};
+
+export type AnalyticsEvent = {
+	id: string;
+	user_id?: string;
+	event_type: string;
+	event_data: Record<string, unknown>;
+	created_at: string;
 };
 
 // Initialize Supabase client
@@ -35,72 +61,107 @@ if (!supabaseUrl || !supabaseKey) {
 
 export const supabase = createClient(supabaseUrl, supabaseKey);
 
-// Database helper functions
-export const createFSM = async (metadata: Omit<FSMMetadata, 'id' | 'created_at' | 'updated_at'>) => {
+// Profile helper functions
+export const getProfile = async (userId: string) => {
 	const { data, error } = await supabase
-		.from('fsm_metadata')
-		.insert(metadata)
+		.from('profiles')
+		.select()
+		.eq('id', userId)
+		.single();
+
+	if (error) throw error;
+	return data as Profile;
+};
+
+export const updateProfile = async (userId: string, profile: Partial<Profile>) => {
+	const { data, error } = await supabase
+		.from('profiles')
+		.update(profile)
+		.eq('id', userId)
 		.select()
 		.single();
 
 	if (error) throw error;
-	return data;
+	return data as Profile;
 };
 
-export const createStep = async (step: Omit<FSMStep, 'id' | 'created_at' | 'updated_at'>) => {
+// Game helper functions
+export const getTodaysGames = async () => {
+	const today = new Date().toISOString().split('T')[0];
 	const { data, error } = await supabase
-		.from('fsm_steps')
-		.insert(step)
+		.from('games')
+		.select()
+		.eq('game_date', today)
+		.order('created_at', { ascending: true });
+
+	if (error) throw error;
+	return data as Game[];
+};
+
+export const getGame = async (gameId: string) => {
+	const { data, error } = await supabase
+		.from('games')
+		.select()
+		.eq('id', gameId)
+		.single();
+
+	if (error) throw error;
+	return data as Game;
+};
+
+// Play helper functions
+export const getGamePlays = async (gameId: string) => {
+	const { data, error } = await supabase
+		.from('plays')
+		.select()
+		.eq('game_id', gameId)
+		.order('sequence_number', { ascending: true });
+
+	if (error) throw error;
+	return data as Play[];
+};
+
+export const getPlaysAfterSequence = async (gameId: string, sequenceNumber: number) => {
+	const { data, error } = await supabase
+		.from('plays')
+		.select()
+		.eq('game_id', gameId)
+		.gt('sequence_number', sequenceNumber)
+		.order('sequence_number', { ascending: true });
+
+	if (error) throw error;
+	return data as Play[];
+};
+
+// Listening session helper functions
+export const startListeningSession = async (userId: string, gameId: string) => {
+	const { data, error } = await supabase
+		.from('listening_sessions')
+		.insert({ user_id: userId, game_id: gameId })
 		.select()
 		.single();
 
 	if (error) throw error;
-	return data;
+	return data as ListeningSession;
 };
 
-export const updateStep = async (id: string, step: Partial<FSMStep>) => {
+export const updateListeningSession = async (sessionId: string, updates: Partial<ListeningSession>) => {
 	const { data, error } = await supabase
-		.from('fsm_steps')
-		.update(step)
-		.eq('id', id)
+		.from('listening_sessions')
+		.update(updates)
+		.eq('id', sessionId)
 		.select()
 		.single();
 
 	if (error) throw error;
-	return data;
+	return data as ListeningSession;
 };
 
-export const getFSM = async (id: string) => {
-	const { data: metadata, error: metadataError } = await supabase
-		.from('fsm_metadata')
-		.select()
-		.eq('id', id)
-		.single();
+// Analytics helper functions
+export const trackEvent = async (eventType: string, eventData: Record<string, unknown>, userId?: string) => {
+	const { error } = await supabase
+		.from('analytics_events')
+		.insert({ event_type: eventType, event_data: eventData, user_id: userId });
 
-	if (metadataError) throw metadataError;
-
-	const { data: steps, error: stepsError } = await supabase
-		.from('fsm_steps')
-		.select()
-		.eq('fsm_id', id);
-
-	if (stepsError) throw stepsError;
-
-	return { metadata, steps };
-};
-
-export const deleteFSM = async (id: string) => {
-	const { error: stepsError } = await supabase
-		.from('fsm_steps')
-		.delete()
-		.eq('fsm_id', id);
-
-	if (stepsError) throw stepsError;
-
-	const { error: metadataError } = await supabase
-		.from('fsm_metadata')
-		.delete()
-		.eq('id', id);
-
-	if (metadataError) throw metadataError;
+	if (error) throw error;
 }; 
