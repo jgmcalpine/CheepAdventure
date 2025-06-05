@@ -1,52 +1,83 @@
 'use client';
 
-import { useState } from 'react';
-import { Metadata } from 'next';
-import { FSMBuilder } from '@/components/fsm-builder/fsm-builder';
-import { mockFSM, mockSteps } from '@/lib/mock-data';
-import { FSMStep } from '@/lib/supabase';
+import { useAuth } from '@/contexts/AuthContext'
+import SignInForm from '@/components/auth/SignInForm'
+import SignUpForm from '@/components/auth/SignUpForm'
+import GameList from '@/components/games/GameList'
+import { Box, Paper, Tabs, Tab, Typography } from '@mui/material'
+import { useState } from 'react'
 
-export const metadata: Metadata = {
-	title: 'CheepAdventure - FSM Editor Demo',
-};
+interface TabPanelProps {
+	children?: React.ReactNode
+	index: number
+	value: number
+}
 
-export default function Home() {
-	const [steps, setSteps] = useState<FSMStep[]>(mockSteps);
-
-	const handleStepCreate = async (step: Omit<FSMStep, 'id' | 'created_at' | 'updated_at'>) => {
-		const newStep: FSMStep = {
-			...step,
-			id: `step-${Date.now()}`,
-			created_at: new Date().toISOString(),
-			updated_at: new Date().toISOString(),
-		};
-		setSteps([...steps, newStep]);
-	};
-
-	const handleStepUpdate = async (id: string, step: Partial<FSMStep>) => {
-		setSteps(steps.map((s: FSMStep) => (s.id === id ? { ...s, ...step } : s)));
-	};
-
-	const handleStepDelete = async (id: string) => {
-		setSteps(steps.filter((s: FSMStep) => s.id !== id));
-	};
+function TabPanel(props: TabPanelProps) {
+	const { children, value, index, ...other } = props
 
 	return (
-		<div className="min-h-screen flex flex-col">
-			<header className="bg-white shadow">
-				<div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-					<h1 className="text-3xl font-bold text-gray-900">{mockFSM.title}</h1>
-					<p className="mt-1 text-sm text-gray-500">{mockFSM.description}</p>
-				</div>
-			</header>
-			<main className="flex-1">
-				<FSMBuilder
-					steps={steps}
-					onStepCreate={handleStepCreate}
-					onStepUpdate={handleStepUpdate}
-					onStepDelete={handleStepDelete}
-				/>
-			</main>
+		<div
+			role="tabpanel"
+			hidden={value !== index}
+			id={`auth-tabpanel-${index}`}
+			aria-labelledby={`auth-tab-${index}`}
+			{...other}
+		>
+			{value === index && (
+				<Box sx={{ p: 3 }}>
+					{children}
+				</Box>
+			)}
 		</div>
-	);
+	)
+}
+
+export default function Home() {
+	const { user, loading } = useAuth()
+	const [tabValue, setTabValue] = useState(0)
+
+	const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
+		setTabValue(newValue)
+	}
+
+	if (loading) {
+		return (
+			<Box sx={{ textAlign: 'center', mt: 4 }}>
+				<Typography>Loading...</Typography>
+			</Box>
+		)
+	}
+
+	if (!user) {
+		return (
+			<Box sx={{ maxWidth: 400, mx: 'auto', mt: 4 }}>
+				<Paper>
+					<Tabs
+						value={tabValue}
+						onChange={handleTabChange}
+						variant="fullWidth"
+					>
+						<Tab label="Sign In" />
+						<Tab label="Sign Up" />
+					</Tabs>
+					<TabPanel value={tabValue} index={0}>
+						<SignInForm />
+					</TabPanel>
+					<TabPanel value={tabValue} index={1}>
+						<SignUpForm />
+					</TabPanel>
+				</Paper>
+			</Box>
+		)
+	}
+
+	return (
+		<Box>
+			<Typography variant="h4" gutterBottom>
+				Today's Games
+			</Typography>
+			<GameList />
+		</Box>
+	)
 }
