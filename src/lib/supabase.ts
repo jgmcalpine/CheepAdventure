@@ -27,13 +27,13 @@ export type FSMStep = {
 
 // Initialize Supabase client
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-if (!supabaseUrl || !supabaseKey) {
+if (!supabaseUrl || !supabaseAnonKey) {
 	throw new Error('Missing Supabase environment variables');
 }
 
-export const supabase = createClient(supabaseUrl, supabaseKey);
+export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 // Database helper functions
 export const createFSM = async (metadata: Omit<FSMMetadata, 'id' | 'created_at' | 'updated_at'>) => {
@@ -103,4 +103,46 @@ export const deleteFSM = async (id: string) => {
 		.eq('id', id);
 
 	if (metadataError) throw metadataError;
+};
+
+export type Profile = {
+	id: string;
+	username: string | null;
+	preferences: Record<string, unknown>;
+	created_at: string;
+	updated_at: string;
+};
+
+export type Game = {
+	id: string;
+	game_date: string;
+	home_team: string;
+	away_team: string;
+	status: string;
+	inning: number;
+	inning_half: string | null;
+	created_at: string;
+	updated_at: string;
+};
+
+export type Play = {
+	id: string;
+	game_id: string;
+	play_id: string;
+	sequence_number: number;
+	inning: number;
+	inning_half: string;
+	description: string;
+	audio_url: string | null;
+	audio_generated_at: string | null;
+	created_at: string;
+};
+
+export type ListeningSession = {
+	id: string;
+	user_id: string;
+	game_id: string;
+	started_at: string;
+	ended_at: string | null;
+	last_play_sequence: number;
 }; 
